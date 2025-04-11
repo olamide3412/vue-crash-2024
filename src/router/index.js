@@ -1,10 +1,13 @@
-import AddJobView from "@/views/AddJobView.vue";
-import EditJobView from "@/views/EditJobView.vue";
+import AddJobView from "@/views/job/AddJobView.vue";
+import EditJobView from "@/views/job/EditJobView.vue";
 import HomeView from "@/views/HomeView.vue";
-import JobsView from "@/views/JobsView.vue";
-import JobView from "@/views/JobView.vue";
+import JobsView from "@/views/job/JobsView.vue";
+import JobView from "@/views/job/JobView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import EditCompanyView from "@/views/company/EditCompanyView.vue";
+import CompaniesView from "@/views/company/CompaniesView.vue";
+import CompanyView from "@/views/company/CompanyView.vue";
 
 
 
@@ -35,6 +38,21 @@ const router = createRouter({
             path: '/jobs/edit/:id',
             name: 'edit-job',
             component: EditJobView
+        },
+        {
+            path: '/companies',
+            name: 'companies',
+            component: CompaniesView
+        },
+        {
+            path: '/company/:id',
+            name: 'company',
+            component: CompanyView
+        },
+        {
+            path: '/companies/edit/:id',
+            name: 'edit-company',
+            component: EditCompanyView
         },
         {
             path: '/:catchAll(.*)',

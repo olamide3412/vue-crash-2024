@@ -45,7 +45,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <BackButton/>
+  <BackButton :backButtonText="'Back to Job Listings'"/>
     <section v-if="!state.isLoading" class="bg-green-50">
       <div class="container m-auto py-10 px-6">
         <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">

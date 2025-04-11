@@ -10,15 +10,28 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
-  server:{
+  // server:{
+  //   port: 3000,
+  //   proxy: {
+  //     '/api':{
+  //       target: 'http://localhost:5000',
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, ''),
+  //     }
+  //   }
+  // },
+  server: {
     port: 3000,
     proxy: {
-      '/api':{
-        target: 'http://localhost:5000',
+      '/api': {
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      }
-    }
+        headers:{
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      },
+    },
   },
   resolve: {
     alias: {

@@ -4,7 +4,8 @@ import { RouterLink, useRoute } from 'vue-router';
 
 const isActiveLink = (routePath) => {
   const route = useRoute();
-  return route.path === routePath;
+  //return route.path === routePath || route.name === routePath;
+  return route.name === routePath;
 }
 
 
@@ -20,37 +21,36 @@ const isActiveLink = (routePath) => {
             <!-- Logo -->
             <RouterLink class="flex flex-shrink-0 items-center mr-4" to="/">
               <img class="h-10 w-auto" :src="logo" alt="Vue Jobs" />
-              <span class="hidden md:block text-white text-2xl font-bold ml-2"
-                >Vue Jobs</span
-              >
+              <span class="hidden md:block text-white text-2xl font-bold ml-2">
+                Vue Jobs</span>
             </RouterLink>
             <div class="md:ml-auto">
               <div class="flex space-x-2">
                 <RouterLink
-                  to="/"
+                  :to="{name:'home'}"
                   :class="[ 
-                    isActiveLink('/') 
+                    isActiveLink('home') 
                     ? 'bg-green-900' 
                     : 'hover:bg-gray-900 hover:text-white', 
                       'text-white', 'px-3',' py-2', 'rounded-md']"
                   >Home
                 </RouterLink>
                 <RouterLink
-                  to="/jobs"
+                 :to="{name:'jobs'}"
                   :class="[ 
-                    isActiveLink('/jobs') 
+                    isActiveLink('jobs') 
                     ? 'bg-green-900' 
                     : 'hover:bg-gray-900 hover:text-white', 
                       'text-white', 'px-3',' py-2', 'rounded-md']"
                   >Jobs</RouterLink>
                 <RouterLink
-                  to="/jobs/add"
+                  :to="{name:'companies'}"
                   :class="[ 
-                    isActiveLink('/jobs/add') 
+                    isActiveLink('companies') 
                     ? 'bg-green-900' 
                     : 'hover:bg-gray-900 hover:text-white', 
                     'text-white', 'px-3',' py-2', 'rounded-md']"
-                  >Add Job</RouterLink>
+                  >Companies</RouterLink>
               </div>
             </div>
           </div>

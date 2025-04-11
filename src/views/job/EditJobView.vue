@@ -4,6 +4,7 @@ import router  from '@/router';
 import { reactive, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useRoute } from 'vue-router';
+import BackButton from '@/components/BackButton.vue';
 
 
 const route = useRoute();
@@ -17,20 +18,17 @@ const form = reactive({
     description: '',
     salary: '',
     location: '',
-    company:{
-        name: '',
-        description: '',
-        contactEmail: '',
-        contactPhone: '',
-    }
+    company_id: ''
 });
 
+const companyList = reactive([]);
 const state = reactive({
     job:{},
     isLoading: true
 });
 
 const toast = useToast();
+
 
 const handleSubmit = async () =>{
    const updatedJob = {
@@ -39,18 +37,13 @@ const handleSubmit = async () =>{
         description: form.description,
         salary: form.salary,
         location: form.location,
-        company: {
-            name: form.company.name,
-            description: form.company.name,
-            contactEmail: form.company.contactEmail,
-            contactPhone: form.company.contactPhone,
-        }
+        company_id: form.company_id
    };
 
    try {
         const response = await axios.put(`/api/jobs/${jobId}`, updatedJob);
         toast.success('Job Updated Successfully');
-        router.push(`/jobs/${response.data.id}`);
+        router.push({name:'job', params:{id:response.data.id}});
     } catch (error) {
         console.error('Error updating job', error);
         toast.error('Job was not updated');
@@ -58,8 +51,18 @@ const handleSubmit = async () =>{
    
 };
 
-onMounted(async () => {
+const fetchCompany = async () => {
     try {
+      const response = await axios.get('/api/companies',{'paginate':false});
+      companyList.splice(0, companyList.length, ...response.data);
+    } catch (error) {
+      console.error('Error fetching companies', error);
+      toast.error('Company was not fetch');
+    }
+}
+
+const fetchJob = async () => {
+  try {
         const response = await axios.get(`/api/jobs/${jobId}`);
         state.job = response.data;
         //Populate input
@@ -68,19 +71,23 @@ onMounted(async () => {
         form.description = state.job.description
         form.salary = state.job.salary
         form.location = state.job.location
-        form.company.name = state.job.company.name
-        form.company.description = state.job.company.description
-        form.company.contactEmail = state.job.company.contactEmail
-        form.company.contactPhone = state.job.company.contactPhone
+        form.company_id = state.job.company.id
     } catch (error) {
         console.error('error fetching job', error);
     } finally{
         state.isLoading = false;
     }
+}
+
+onMounted(() => {
+    fetchCompany();
+    fetchJob();
 });
+
 </script>
 
 <template>
+<BackButton :backButtonText="'Back to Job View'"/>
 <section class="bg-green-50">
       <div class="container m-auto max-w-2xl py-24">
         <div
@@ -177,70 +184,23 @@ onMounted(async () => {
               />
             </div>
 
-            <h3 class="text-2xl mb-5">Company Info</h3>
+            <h3 class="text-2xl mb-5">Company</h3>
 
             <div class="mb-4">
-              <label for="company" class="block text-gray-700 font-bold mb-2"
-                >Company Name</label
+              <label for="company_id" class="block text-gray-700 font-bold mb-2"
+                >Company</label
               >
-              <input
-                type="text"
-                v-model="form.company.name"
-                id="company"
-                name="company"
+              <select
+                v-model="form.company_id"
+                id="company_id"
+                name="company_id"
                 class="border rounded w-full py-2 px-3"
-                placeholder="Company Name"
-              />
-            </div>
-
-            <div class="mb-4">
-              <label
-                for="company_description"
-                class="block text-gray-700 font-bold mb-2"
-                >Company Description</label
-              >
-              <textarea
-                v-model="form.company.description"
-                id="company_description"
-                name="company_description"
-                class="border rounded w-full py-2 px-3"
-                rows="4"
-                placeholder="What does your company do?"
-              ></textarea>
-            </div>
-
-            <div class="mb-4">
-              <label
-                for="contact_email"
-                class="block text-gray-700 font-bold mb-2"
-                >Contact Email</label
-              >
-              <input
-                type="email"
-                v-model="form.company.contactEmail"
-                id="contact_email"
-                name="contact_email"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Email address for applicants"
                 required
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="contact_phone"
-                class="block text-gray-700 font-bold mb-2"
-                >Contact Phone</label
               >
-              <input
-                type="tel"
-                v-model="form.company.contactPhone"
-                id="contact_phone"
-                name="contact_phone"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Optional phone for applicants"
-              />
+              <option v-for="company in companyList" :key="company.id" :value="company.id">{{ company.name }}</option>
+              </select>
             </div>
-
+            
             <div>
               <button
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"

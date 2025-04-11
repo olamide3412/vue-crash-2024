@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios';
 import router  from '@/router';
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 
 
@@ -12,13 +12,10 @@ const form = reactive({
     description: '',
     salary: '',
     location: '',
-    company:{
-        name: '',
-        description: '',
-        contactEmail: '',
-        contactPhone: '',
-    }
+    company_id: ''
 });
+
+const companyList = reactive([]);
 
 const toast = useToast();
 
@@ -29,12 +26,7 @@ const handleSubmit = async () =>{
         description: form.description,
         salary: form.salary,
         location: form.location,
-        company: {
-            name: form.company.name,
-            description: form.company.name,
-            contactEmail: form.company.contactEmail,
-            contactPhone: form.company.contactPhone,
-        }
+        company_id: form.company_id
    };
 
    try {
@@ -47,11 +39,26 @@ const handleSubmit = async () =>{
     } 
    
 };
+
+const fetchCompany = async () => {
+    try {
+      const response = await axios.get('/api/companies',{'paginate':false});
+      console.log(response.data)
+      companyList.splice(0, companyList.length, ...response.data);
+    } catch (error) {
+      console.error('Error fetching companies', error);
+      toast.error('Company was not fetch');
+    }
+}
+
+onMounted(() => {
+  fetchCompany();
+})
 </script>
 
 <template>
 <section class="bg-green-50">
-      <div class="container m-auto max-w-2xl py-24">
+      <div class="container m-auto max-w-2xl py-16">
         <div
           class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"
         >
@@ -146,68 +153,20 @@ const handleSubmit = async () =>{
               />
             </div>
 
-            <h3 class="text-2xl mb-5">Company Info</h3>
-
+            <h3 class="text-2xl mb-5">Company</h3>
             <div class="mb-4">
-              <label for="company" class="block text-gray-700 font-bold mb-2"
-                >Company Name</label
+              <label for="company_id" class="block text-gray-700 font-bold mb-2"
+                >Company</label
               >
-              <input
-                type="text"
-                v-model="form.company.name"
-                id="company"
-                name="company"
+              <select
+                v-model="form.company_id"
+                id="company_id"
+                name="company_id"
                 class="border rounded w-full py-2 px-3"
-                placeholder="Company Name"
-              />
-            </div>
-
-            <div class="mb-4">
-              <label
-                for="company_description"
-                class="block text-gray-700 font-bold mb-2"
-                >Company Description</label
-              >
-              <textarea
-                v-model="form.company.description"
-                id="company_description"
-                name="company_description"
-                class="border rounded w-full py-2 px-3"
-                rows="4"
-                placeholder="What does your company do?"
-              ></textarea>
-            </div>
-
-            <div class="mb-4">
-              <label
-                for="contact_email"
-                class="block text-gray-700 font-bold mb-2"
-                >Contact Email</label
-              >
-              <input
-                type="email"
-                v-model="form.company.contactEmail"
-                id="contact_email"
-                name="contact_email"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Email address for applicants"
                 required
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="contact_phone"
-                class="block text-gray-700 font-bold mb-2"
-                >Contact Phone</label
               >
-              <input
-                type="tel"
-                v-model="form.company.contactPhone"
-                id="contact_phone"
-                name="contact_phone"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Optional phone for applicants"
-              />
+              <option v-for="company in companyList" :key="company.id" :value="company.id">{{ company.name }}</option>
+              </select>
             </div>
 
             <div>

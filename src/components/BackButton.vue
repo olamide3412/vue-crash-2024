@@ -1,18 +1,27 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import {  useRouter } from 'vue-router';
 
-
+const router = useRouter();
+const props = defineProps({
+  backButtonText :{
+    type: String,
+    default: 'Go Back'
+  }
+})
+const goBack = () =>{
+  router.back();
+}
 </script>
 
 <template>
      <section>
       <div class="container m-auto py-6 px-6">
-        <RouterLink
-          to="/jobs"
+        <button
+          @click="goBack"
           class="text-green-500 hover:text-green-600 flex items-center"
         >
-          <i class="pi pi-arrow-circle-left mr-3"></i> Back to Job Listings
-        </RouterLink>
+          <i class="pi pi-arrow-circle-left mr-3"></i> {{ props.backButtonText }}
+        </button>
       </div>
     </section>
 </template>
