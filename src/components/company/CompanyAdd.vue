@@ -27,7 +27,7 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await apiClient.get('/companies', newCompany,{
+        const response = await apiClient.post('/companies', newCompany,{
             headers:{
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }
