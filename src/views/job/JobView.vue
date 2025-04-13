@@ -6,6 +6,7 @@ import { reactive, onMounted } from 'vue';
 import { useRoute, RouterLink, useRouter } from 'vue-router';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { useToast } from 'vue-toastification';
+import apiClient from '@/services/api';
 
 const route = useRoute();
 const router = useRouter();
@@ -33,7 +34,7 @@ const deleteJob = async () => {
 
     const confirm = window.confirm('Are you sure you want to delete this job?');
     if(confirm){
-      await axios.delete(`/api/jobs/${jobId}`,{
+      await apiClient.delete(`/api/jobs/${jobId}`,{
         headers:{
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }

@@ -6,6 +6,7 @@ import { onMounted, reactive } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { useToast } from 'vue-toastification';
+import apiClient from '@/services/api';
 
 const authStore = useAuthStore();
 const route = useRoute();
@@ -33,7 +34,7 @@ const deleteCompany = async () => {
     try {
         const confirm = window.confirm('Are tou sure you want to delete this company?');
         if(confirm){
-            await axios.delete(`/api/companies/${companyId}`,{
+            await apiClient.delete(`/companies/${companyId}`,{
                 headers:{
                     'Authorization': 'Bearer 1|IxqCaRQfz6Ox4f4wdMr06Zmen8Oli0BWndEXI64730170a8f',
                 }
@@ -49,7 +50,7 @@ const deleteCompany = async () => {
 
 onMounted(async() => {
     try {
-        const res = await axios.get(`/api/companies/${companyId}`);
+        const res = await apiClient.get(`/companies/${companyId}`);
         state.company = res.data;
     } catch (error) {
         console.error('Error fetching company',error);

@@ -6,7 +6,7 @@ import { useToast } from 'vue-toastification';
 import { useRoute } from 'vue-router';
 import BackButton from '@/components/BackButton.vue';
 import { useAuthStore } from '@/stores/auth';
-
+import apiClient from '@/services/api';
 
 const route = useRoute();
 const jobId = route.params.id;
@@ -51,7 +51,7 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await axios.put(`/api/jobs/${jobId}`, updatedJob,{
+        const response = await apiClient.put(`/jobs/${jobId}`, updatedJob,{
             headers:{
               Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -67,7 +67,7 @@ const handleSubmit = async () =>{
 
 const fetchCompany = async () => {
     try {
-      const response = await axios.get('/api/companies',{
+      const response = await apiClient.get('/companies',{
         params:{
           'paginate':0
         },
@@ -81,7 +81,7 @@ const fetchCompany = async () => {
 
 const fetchJob = async () => {
   try {
-        const response = await axios.get(`/api/jobs/${jobId}`);
+        const response = await apiClient.get(`/jobs/${jobId}`);
         state.job = response.data;
         //Populate input
         form.type = state.job.type

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { reactive } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import apiClient from '@/services/api';
 
 const authStore = useAuthStore();
 const form = reactive({
@@ -26,7 +27,7 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await axios.post('/api/companies', newCompany,{
+        const response = await apiClient.get('/companies', newCompany,{
             headers:{
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }

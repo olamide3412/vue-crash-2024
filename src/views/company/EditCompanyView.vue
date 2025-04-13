@@ -6,7 +6,7 @@ import axios from 'axios';
 import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
-
+import apiClient from '@/services/api';
 
 const authStore = useAuthStore();
 
@@ -45,7 +45,7 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await axios.put(`/api/companies/${companyId}`, updateCompany,{
+        const response = await apiClient.put(`/companies/${companyId}`, updateCompany,{
             headers:{
                 'Authorization': 'Bearer 1|IxqCaRQfz6Ox4f4wdMr06Zmen8Oli0BWndEXI64730170a8f',
             }
@@ -61,7 +61,7 @@ const handleSubmit = async () =>{
 
 onMounted(async () =>{
     try {
-        const res = await axios.get(`/api/companies/${companyId}`);
+        const res = await apiClient.get(`/companies/${companyId}`);
         state.company = res.data;
         form.name = state.company.name;
         form.description = state.company.description;

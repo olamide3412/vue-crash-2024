@@ -3,7 +3,7 @@ import axios from 'axios';
 import router  from '@/router';
 import { nextTick, onMounted, reactive } from 'vue';
 import { useToast } from 'vue-toastification';
-
+import apiClient from '@/services/api';
 
 
 const form = reactive({
@@ -30,7 +30,7 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await axios.post('/api/jobs', newJob,{
+        const response = await apiClient.post('/jobs', newJob,{
           headers:{
             Authorization: `Bearer ${localStorage.getItem('token')}`
         },
@@ -46,7 +46,7 @@ const handleSubmit = async () =>{
 
 const fetchCompany = async () => {
     try {
-      const response = await axios.get('/api/companies',{
+      const response = await apiClient.get('/companies',{
         params:{
           'paginate':0
         },

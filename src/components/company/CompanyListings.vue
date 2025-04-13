@@ -6,6 +6,7 @@ import { useToast } from 'vue-toastification';
 import Pagination from '../Pagination.vue';
 import { nextTick } from 'vue';
 import { RouterLink } from 'vue-router';
+import apiClient from '@/services/api';
 
 const toast = useToast();
 const state = reactive({
@@ -20,7 +21,7 @@ const showErrorMsg = (msg) => toast.error(msg);
 const fetchCompanies = async (page = 1) => {
     state.isLoading = true;
     try {
-        const response = await axios.get(`/api/companies?page=${page}&paginate=${true}`);
+        const response = await apiClient.get(`/companies?page=${page}&paginate=${true}`);
         state.company = response.data.data;
         state.currentPage = response.data.current_page;
         state.lastPage = response.data.last_page;

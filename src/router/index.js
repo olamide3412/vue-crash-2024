@@ -82,7 +82,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) =>{
     const authStore = useAuthStore();
-    await authStore.getUser();
+    //await authStore.getUser();
 
     if(authStore.user && to.meta.guest){
         return { name: 'home'}

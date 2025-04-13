@@ -5,7 +5,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import Pagination from '../Pagination.vue';
-
+import apiClient from '@/services/api';
 
 const props = defineProps({
     limit: Number,
@@ -27,7 +27,7 @@ const router = useRouter();
 
 const fetchJobs = async(page = 1) => {
     try {
-        const response = await axios.get(`/api/jobs?page=${page}`);
+        const response = await apiClient.get(`/jobs?page=${page}`);
         state.jobs = response.data.data;
         state.currentPage = response.data.current_page;
         state.lastPage = response.data.last_page;
