@@ -84,7 +84,7 @@ const updateRouteOnAddressBar = (page) => {
 onMounted(async () => {
     const initialPage = parseInt(route.query.page) || 1;
     await fetchJobs(initialPage);
-    updateRouteOnAddressBar(initialPage);
+    !props.showButton && updateRouteOnAddressBar(initialPage); // so it won't show on home page
 });
 
 
@@ -102,7 +102,7 @@ onMounted(async () => {
             <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
                 Browse Jobs
             </h2>
-            <div class="py-3">
+            <div v-if="!showButton" class="py-3">
                 <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                     <input
                         v-model="filters.title"
