@@ -1,6 +1,7 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import { RouterView } from 'vue-router';
+import ScrollTopButton from './components/ScrollTopButton.vue';
 
 
 </script>
@@ -8,4 +9,5 @@ import { RouterView } from 'vue-router';
 <template>
   <NavBar/>
   <RouterView/>
+  <ScrollTopButton/>
 </template>
