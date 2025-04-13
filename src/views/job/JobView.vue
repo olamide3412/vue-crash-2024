@@ -34,7 +34,7 @@ const deleteJob = async () => {
 
     const confirm = window.confirm('Are you sure you want to delete this job?');
     if(confirm){
-      await apiClient.delete(`/api/jobs/${jobId}`,{
+      await apiClient.delete(`/jobs/${jobId}`,{
         headers:{
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -51,8 +51,9 @@ const deleteJob = async () => {
 
 onMounted(async () => {
     try {
-        const response = await axios.get(`/api/jobs/${jobId}`);
+        const response = await apiClient.get(`/jobs/${jobId}`);
         state.job = response.data;
+        console.log(state.job)
     } catch (error) {
         console.error('Error fetching job', error);
     } finally{
