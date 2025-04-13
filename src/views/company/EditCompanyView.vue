@@ -1,11 +1,14 @@
 <script setup>
 import BackButton from '@/components/BackButton.vue';
 import router from '@/router';
+import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
+
+const authStore = useAuthStore();
 
 const form = reactive({
     name: '',
@@ -25,6 +28,15 @@ const route = useRoute();
 const companyId = route.params.id
 
 const handleSubmit = async () =>{
+  if (!authStore.user){
+        router.push({name:'login'});
+        return;
+    }
+
+    if(authStore.user.id != state.company.user_id){
+      toast.warning('This company does not belongs to you.');
+      return;
+    }
    const updateCompany = {
         name: form.name,
         description: form.description,

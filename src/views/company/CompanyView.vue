@@ -1,12 +1,13 @@
 <script setup>
 import BackButton from '@/components/BackButton.vue';
+import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 import { onMounted, reactive } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { useToast } from 'vue-toastification';
 
-
+const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
@@ -20,6 +21,15 @@ const state = reactive({
 });
 
 const deleteCompany = async () => {
+  if (!authStore.user){
+        router.push({name:'login'});
+        return;
+    }
+
+    if(authStore.user.id != state.company.user_id){
+      toast.warning('This company does not belongs to you.');
+      return;
+    }
     try {
         const confirm = window.confirm('Are tou sure you want to delete this company?');
         if(confirm){

@@ -1,6 +1,10 @@
 <script setup>
 import logo from '@/assets/img/logo.png'
+import skywaylogo from '@/assets/img/skyway_logo.png'
+import { useAuthStore } from '@/stores/auth';
 import { RouterLink, useRoute } from 'vue-router';
+
+const authStore = useAuthStore();
 
 const isActiveLink = (routePath) => {
   const route = useRoute();
@@ -20,9 +24,9 @@ const isActiveLink = (routePath) => {
           >
             <!-- Logo -->
             <RouterLink class="flex flex-shrink-0 items-center mr-4" to="/">
-              <img class="h-10 w-auto" :src="logo" alt="Vue Jobs" />
+              <img class="h-10 w-auto" :src="skywaylogo" alt="Vue Jobs" />
               <span class="hidden md:block text-white text-2xl font-bold ml-2">
-                Vue Jobs</span>
+                Skyway Tech Jobs</span>
             </RouterLink>
             <div class="md:ml-auto">
               <div class="flex space-x-2">
@@ -51,8 +55,27 @@ const isActiveLink = (routePath) => {
                     : 'hover:bg-gray-900 hover:text-white', 
                     'text-white', 'px-3',' py-2', 'rounded-md']"
                   >Companies</RouterLink>
+                  <RouterLink
+                    v-if="!authStore.user"
+                    :to="{name:'login'}"
+                    :class="[ 
+                      isActiveLink('login') 
+                      ? 'bg-green-900' 
+                      : 'hover:bg-gray-900 hover:text-white', 
+                      'text-white', 'px-3',' py-2', 'rounded-md']"
+                    >Login
+              </RouterLink>
+              <form 
+                  v-if="authStore.user"
+                  @submit.prevent="authStore.logout">
+                  <button 
+                    class="text-white px-3 py-2 rounded-md bg-red-500 hover:bg-red-700 hover:text-white" >
+                    Logout
+                  </button>
+              </form>
               </div>
             </div>
+           
           </div>
         </div>
       </div>

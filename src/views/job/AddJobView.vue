@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios';
 import router  from '@/router';
-import { onMounted, reactive } from 'vue';
+import { nextTick, onMounted, reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 
 
@@ -30,7 +30,11 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await axios.post('/api/jobs', newJob);
+        const response = await axios.post('/api/jobs', newJob,{
+          headers:{
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        });
         toast.success('Job Added Successfully');
         router.push(`/jobs/${response.data.id}`);
     } catch (error) {
@@ -42,7 +46,11 @@ const handleSubmit = async () =>{
 
 const fetchCompany = async () => {
     try {
-      const response = await axios.get('/api/companies',{'paginate':false});
+      const response = await axios.get('/api/companies',{
+        params:{
+          'paginate':0
+        },
+      });
       console.log(response.data)
       companyList.splice(0, companyList.length, ...response.data);
     } catch (error) {
@@ -51,8 +59,10 @@ const fetchCompany = async () => {
     }
 }
 
-onMounted(() => {
+onMounted(async () => {
   fetchCompany();
+  await nextTick();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 })
 </script>
 

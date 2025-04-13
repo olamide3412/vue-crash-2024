@@ -1,5 +1,6 @@
 <script setup>
 import BackButton from '@/components/BackButton.vue';
+import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 import { reactive, onMounted } from 'vue';
 import { useRoute, RouterLink, useRouter } from 'vue-router';
@@ -11,6 +12,7 @@ const router = useRouter();
 const toast = useToast();
 
 const jobId = route.params.id;
+const authStore = useAuthStore();
 
 const state = reactive({
   job: {},
@@ -19,9 +21,23 @@ const state = reactive({
 
 const deleteJob = async () => {
   try {
+    if (!authStore.user){
+        router.push({name:'login'});
+        return;
+    }
+
+    if(authStore.user.id != state.job.user_id){
+      toast.warning('This job does not belongs to you.');
+      return;
+    }
+
     const confirm = window.confirm('Are you sure you want to delete this job?');
     if(confirm){
-      await axios.delete(`/api/jobs/${jobId}`);
+      await axios.delete(`/api/jobs/${jobId}`,{
+        headers:{
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       toast.success('Job Deleted Successfully');
       router.push('/jobs');
     }

@@ -1,13 +1,33 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import Card from './Card.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 </script>
 
 <template>
- <section class="py-4">
+ <section class="py-1">
       <div class="container-xl lg:container m-auto">
+        <div v-if="!authStore.user" class=" px-5">
+            <div class=" flex items-center justify-center space-x-5">
+              <RouterLink
+              :to="{ name:'login'}"
+              class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+            >
+              Login
+            </RouterLink>
+            <RouterLink
+              :to="{ name:'register' }"
+              class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+            >
+              Register
+            </RouterLink>
+            </div>
+          </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
+          
           <Card>
             <h2 class="text-2xl font-bold">For Developers</h2>
             <p class="mt-2 mb-4">

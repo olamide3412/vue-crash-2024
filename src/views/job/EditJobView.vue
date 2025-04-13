@@ -5,12 +5,12 @@ import { reactive, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useRoute } from 'vue-router';
 import BackButton from '@/components/BackButton.vue';
+import { useAuthStore } from '@/stores/auth';
 
 
 const route = useRoute();
-
-
 const jobId = route.params.id;
+const authStore = useAuthStore();
 
 const form = reactive({
     type: 'Full-Time',
@@ -31,6 +31,16 @@ const toast = useToast();
 
 
 const handleSubmit = async () =>{
+    if (!authStore.user){
+        router.push({name:'login'});
+        return;
+    }
+
+    if(authStore.user.id != state.job.user_id){
+      toast.warning('This job does not belongs to you.');
+      return;
+    }
+
    const updatedJob = {
         type: form.type,
         title: form.title,
@@ -41,7 +51,11 @@ const handleSubmit = async () =>{
    };
 
    try {
-        const response = await axios.put(`/api/jobs/${jobId}`, updatedJob);
+        const response = await axios.put(`/api/jobs/${jobId}`, updatedJob,{
+            headers:{
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         toast.success('Job Updated Successfully');
         router.push({name:'job', params:{id:response.data.id}});
     } catch (error) {
@@ -53,7 +67,11 @@ const handleSubmit = async () =>{
 
 const fetchCompany = async () => {
     try {
-      const response = await axios.get('/api/companies',{'paginate':false});
+      const response = await axios.get('/api/companies',{
+        params:{
+          'paginate':0
+        },
+      });
       companyList.splice(0, companyList.length, ...response.data);
     } catch (error) {
       console.error('Error fetching companies', error);

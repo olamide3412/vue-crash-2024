@@ -1,10 +1,12 @@
 <script setup>
 import router from '@/router';
+import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 import { reactive } from 'vue';
+import { RouterLink } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-
+const authStore = useAuthStore();
 const form = reactive({
     name: '',
     description: '',
@@ -26,7 +28,7 @@ const handleSubmit = async () =>{
    try {
         const response = await axios.post('/api/companies', newCompany,{
             headers:{
-                'Authorization': 'Bearer 1|IxqCaRQfz6Ox4f4wdMr06Zmen8Oli0BWndEXI64730170a8f',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }
         });
         toast.success('Company Added Company successfully');
@@ -39,10 +41,12 @@ const handleSubmit = async () =>{
     } 
    
 };
+
+
 </script>
 
 <template>
-    <section>
+    <section v-if="authStore.user">
       <div class="container m-auto max-w-2xl">
         <div
           class="px-6 py-8 m-4 md:m-0"
@@ -124,4 +128,11 @@ const handleSubmit = async () =>{
         </div>
       </div>
     </section>
+    <div v-else class=" flex items-center justify-center">
+      <RouterLink
+      :to="{name:'login'}"
+      class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-fit ">
+        Login First
+      </RouterLink>
+    </div>
 </template>

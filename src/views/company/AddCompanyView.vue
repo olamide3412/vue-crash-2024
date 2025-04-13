@@ -25,7 +25,7 @@ const handleSubmit = async () =>{
    try {
         const response = await axios.post('/api/companies', newCompany,{
             headers:{
-                'Authorization': 'Bearer 1|IxqCaRQfz6Ox4f4wdMr06Zmen8Oli0BWndEXI64730170a8f',
+                Authorization: 'Bearer 1|IxqCaRQfz6Ox4f4wdMr06Zmen8Oli0BWndEXI64730170a8f',
             }
         });
         toast.success('Company Added Company successfully');
