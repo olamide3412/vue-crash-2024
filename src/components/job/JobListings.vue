@@ -22,12 +22,26 @@ const state = reactive({
     lastPage: 1,
 });
 
+const filters = reactive({
+  title: '',
+  location: '',
+  type: ''
+});
+
 const route = useRoute();
 const router = useRouter();
 
 const fetchJobs = async(page = 1) => {
     try {
-        const response = await apiClient.get(`/jobs?page=${page}`);
+        const query = new URLSearchParams({
+            page: page,
+            title: filters.title,
+            location: filters.location,
+            type: filters.type,
+        }).toString();
+            
+        
+        const response = await apiClient.get(`/jobs?${query}`);
         state.jobs = response.data.data;
         state.currentPage = response.data.current_page;
         state.lastPage = response.data.last_page;
@@ -37,6 +51,17 @@ const fetchJobs = async(page = 1) => {
         state.isLoading = false;
     }
 }
+
+const applyFilters = async () => {
+    const newQuery = {
+    ...route.query,
+    ...filters,
+    page: 1 // reset to first page
+  };
+  router.replace({ query: newQuery });
+   fetchJobs(1); // reset to first page
+  //updateRouteOnAddressBar(1);
+};
 
 const handlePageChange = async (page) => {
   await fetchJobs(page);
@@ -62,14 +87,53 @@ onMounted(async () => {
     updateRouteOnAddressBar(initialPage);
 });
 
+
+
 </script>
 
 <template>
     <section class="bg-blue-50 px-4 py-10">
+       
+        
+           
+       
+
         <div class="container-xl lg:container m-auto" >
             <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
                 Browse Jobs
             </h2>
+            <div class="py-3">
+                <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input
+                        v-model="filters.title"
+                        type="text"
+                        placeholder="Search by Title"
+                        class="p-2 border rounded"
+                    />
+
+                    <input
+                        v-model="filters.location"
+                        type="text"
+                        placeholder="Filter by Location"
+                        class="p-2 border rounded"
+                    />
+
+                    <select v-model="filters.type" class="p-2 border rounded">
+                        <option value="">All Types</option>
+                        <option value="Full-Time">Full Time</option>
+                        <option value="Part-Time">Part Time</option>
+                        <option value="Remote">Remote</option>
+                        <option value="Internship">Internship</option>
+                    </select>
+                </div>
+                <div class=" flex justify-end">
+                    <button
+                        @click="applyFilters"
+                        class="bg-green-600 text-white py-2 px-4 rounded col-span-1 md:col-span-1 hover:bg-green-700">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
             <!-- Show loading spinner while loading is true -->
              <div v-if="state.isLoading" class="text-center text-gray-500 py-6">
                 <PulseLoader/>
