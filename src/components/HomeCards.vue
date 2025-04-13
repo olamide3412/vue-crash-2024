@@ -14,13 +14,13 @@ const authStore = useAuthStore();
             <div class=" flex items-center justify-center space-x-5">
               <RouterLink
               :to="{ name:'login'}"
-              class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+              class="inline-block bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-700"
             >
               Login
             </RouterLink>
             <RouterLink
               :to="{ name:'register' }"
-              class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+              class="inline-block bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-700"
             >
               Register
             </RouterLink>
